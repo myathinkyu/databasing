@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use App\Models\Hacky;
+use App\Models\Post;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,25 +20,79 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/update', function(){
-    $result = DB::update('update post set title=? where id=?', ['Laravel', 1]);
-    return "$result";
-});
-
-
-Route::get('/read', function(){
-    $result = DB::select('select * from post');
-    $var = "";
-    foreach($result as $post){
-        $var .= $post->title . '<br>' . $post->content . '<br>';
+Route::get('/all', function(){
+    $posts = Post::all();
+    foreach($posts as $post){
+        echo $post->title . "<br>". $post->content . "<br>";
     }
-    return $var;
 });
+
+Route::get('/find', function(){
+    //$posts = Post::find(3);
+    //$posts = Post::where('is_admin',1)->get();
+    //$posts = Post::findOrFail(5);
+    $post = new Post;
+
+    $post->title = "React";
+    $post->content = "React is a place where you can ask for help, find opportunities, and meet new friends.";
+
+    $post -> save();
+});
+
+Route::get('/create', function(){
+    Post::create(['title'=>'React', 'content'=>'React is a place where you can ask for help, find opportunities, and meet new friends.']);
+});
+
+//Route::get('/delete', function(){
+    // $post = Post::find(9);
+    // $post->delete();
+
+    //Post::destroy(8);
+
+    //Post::destroy([5,6,7]);
+//});
+
+Route::get('/softdelete', function(){
+    $post = Post::find(10);
+    $post->delete();
+});
+
+// Route::get('/delete/{id}', function($id){
+//     $result = DB::delete('delete from posts where id=?', [$id]);
+//     return $result;
+// });
+
+// Route::get('/update', function(){
+//     $result = DB::update('update posts set title=? where id=?', ['Laravel', 1]);
+//     return "$result";
+// });
+
+// Route::get('/update', function(){
+//     $post = Post::find(9);
+//     $post->title = "PHP";
+//     $post->content = "PHP is a server-side language because php requires a server to run code.";
+
+//     $post->save();
+
+// });
+
+Route::get('/update', function(){
+    Post::where('id',9)->where('is_admin',0)->update(['title'=>'Laraval','content'=>'Laravel is a web application framework with expressive, elegant syntax.']);
+});
+
+// Route::get('/read', function(){
+//     $result = DB::select('select * from posts');
+//     $var = "";
+//     foreach($result as $post){
+//         $var .= $post->title . '<br>' . $post->content . '<br>';
+//     }
+//     return $var;
+// });
 
 Route::get('/insert', function(){
-    DB::insert("insert into post (title,content) value(?,?)", 
-    ["Laravel", "Laravel is a web application framework with expressive, elegant syntax."]);
-    DB::insert("insert into post (title,content) value(?,?)", 
-    ["Java", "Java is a multi-platform, object-oriented, and network-centric language that can be used as a platform in itself."]);
+    DB::insert("insert into hackies (title,content) value(?,?)", 
+    ["Model", "Testing 3"]);
+    DB::insert("insert into hackies (title,content) value(?,?)", 
+    ["PHP", "Testing 4"]);
 });
 
