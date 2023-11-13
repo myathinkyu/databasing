@@ -30,13 +30,16 @@ Route::get('/all', function(){
 Route::get('/find', function(){
     //$posts = Post::find(3);
     //$posts = Post::where('is_admin',1)->get();
+
     //$posts = Post::findOrFail(5);
-    $post = new Post;
+    // $post = new Post;
+    // $post->title = "React";
+    // $post->content = "React is a place where you can ask for help, find opportunities, and meet new friends.";
 
-    $post->title = "React";
-    $post->content = "React is a place where you can ask for help, find opportunities, and meet new friends.";
+    // $post -> save();
 
-    $post -> save();
+    $posts = Post::all();
+    return $posts;
 });
 
 Route::get('/create', function(){
@@ -52,9 +55,23 @@ Route::get('/create', function(){
     //Post::destroy([5,6,7]);
 //});
 
+Route::get('/forcedelete', function(){
+    Post::onlyTrashed()->where('id',10)->forceDelete();
+});
+
 Route::get('/softdelete', function(){
-    $post = Post::find(10);
+    $post = Post::find(2);
     $post->delete();
+});
+
+Route::get('/findsoftdelete', function(){
+    //$posts = Post::withTrashed()->where('id',1)->get();
+    $posts = Post::onlyTrashed()->where('id',12)->get();
+    return $posts;
+});
+
+Route::get('/restore', function(){
+    Post::onlyTrashed()->where('id',4)->restore();
 });
 
 // Route::get('/delete/{id}', function($id){
